@@ -1,0 +1,20 @@
+col1, col2, col3
+1,2,3
+1,only 2 columns
+empty,, 2nd column
+,empty, 1st column
+,,
+prior line was, all empty cells,3
+1,2,"quoted colomn"
+"comma, in qoute", 2, 3
+"""quotes within qoutes",2,3
+1,end of line right after delimiter?,
+1,2,3
+
+prioir line, was, empty
+normal,boring,line
+new, line
+in middle cell, 3
+quoted, "with 
+new line",is okay
+next cell empty,,last

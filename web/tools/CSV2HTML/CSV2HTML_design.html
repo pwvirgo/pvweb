@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html lang="en"><head>
+	<meta charset='utf-8'>
+	<meta name='description' content='a basic html shell'>
+	<meta name='keywords' content='search engine keyword'>
+	<title>CSV to HTML finite states</title>
+
+	<link rel="stylesheet" type="text/css" href="/pvweb/css/simple.css">
+</head>
+<body> 
+<h1>CSV to HTML using a finite state machine</h1>
+<div>
+	<header>Rules for the CSV file</header>
+	<blockquote>
+		<p>The delimiter between cells must be a single character</p>
+		<p>Quotes are optional but must come in a pair that encloses
+		the entire cell</p>
+		<p>Quotes can be included in a quoted cell - 2 consecutive quotes
+			are included in the cell as a single
+			quote.</p>
+		<p>New line will create a new row - unless it occurs with a
+			cell in quotes - it will then be included as a character
+			in that cell</p>
+		<p>Delimiters may be included within quoted cells</p>
+	</blockquote>
+</div>
+<hr>
+<div>
+	<header>The table of Events and States below shows the logic to parse
+		a CSV file using a “finite state machine”.</header>
+
+	<blockquote>
+	<p>The program begins in the startRow State.</p>
+	<p>The CSV file is processed one character at a time. Each character
+		is classified according to the “Events” column of the table.</p>
+	<ul>
+		<li>The event and state are indicate the row and column of the
+			relevant cell table</li>
+		<li><ul>
+			<li>the function in that cell is called</li>
+			<li>the state is changed to the state in that cell</li>
+			</ul></li>
+		<li>The program completes when the entire file has been processed.</li>
+	</ul>
+	</blockquote>
+</div>
+<p>The logic is in the CVS2HTML.js file.  The Event, State, and 
+	function names in the Javascript match those in this documentation.
+	The main loop is the parseCVS() function.</p>
+
+<table>
+	<tbody>
+		<tr><th>Event</th><th colspan="5">State</th>
+		<tr>
+		<th></th>
+		<th>startRow</th>
+		<th>inCell</th>
+		<th>inQcell</th>
+		<th>QinQcell</th>
+		<th>endCell</th>
+	</tr><tr>
+		<th>text</th>
+		<td>newRowCellChr()<hr>inCell</td> 
+		<td>saveChr()<hr>inCell</td>
+		<td>saveChr()<hr>inQcell</td>
+		<td>error()<hr></td>
+		<td>newCellWithChr()<hr>inCell</td>
+	</tr><tr>
+		<th>blank</th>
+		<td>{}<hr>startRow</td> 
+		<td>saveChr()<hr>inCell</td>
+		<td>saveChr()<hr>inQcell</td>
+		<td>error()<hr>inQcell</td>
+		<td>{}<hr>endCell</td>
+	</tr><tr>
+		<th>quote</th>
+		<td>newRowCell()<hr>inQCell</td>
+		<td>saveChr()<hr>inQCell</td>
+		<td>{}<hr>QinQcell</td>
+		<td>saveChr()<hr>inQcell</td>
+		<td>newCell()<hr>inQCell</td>
+	</tr><tr>
+		<th>delimt</th>
+		<td>newRowEmptyCell()<hr>endCell<br></td>
+		<td>endCell()<hr>endCell</td>
+		<td>saveChr()<hr>inQcell</td>
+		<td>endCell()<hr>endCell</td>
+		<td>emptyCell()<hr>endCell</td>
+	</tr><tr>
+		<th>End of line</th>
+		<td>{}<hr>startRow<br></td>
+		<td>endCellEndRow()<hr>startRow</td>
+		<td>saveChr()<hr>inQcell</td>
+		<td>endCellEndRow()<hr>startRow</td>
+		<td>emptyCellEndRow()<hr>startRow</td>
+	</tr>
+</tbody></table>
+
+
+Designed and written in 2015 by Phil Virgo.
+
+</body></html>

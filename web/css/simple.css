@@ -1,0 +1,21 @@
+body {
+	background-color: #F5F3F5;
+}
+
+table, th, td {
+   border: 1px solid black;
+	 border-collapse: collapse;
+	 background-color: #FFFFFA;
+}
+
+th, td {padding: 10px;}
+/* th {background-color: ivory;} */
+
+legend {font-size: 1.25em}
+
+fieldset, th {
+			 background-color: #FFf0e0;
+}
+h1,h2,h3,h4 {text-align: center}
+
+header {font-size: 120%}

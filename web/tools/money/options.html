@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+	<head>
+		<title>Stock Options</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+	<body>
+		<div>
+			<h3>Call options</h3>
+			<p>this is a work in progress - or maybe permanently unfinished.
+				Trading cost are only applied to the options and I think
+				the costs would be different for option vs buy/sell. </p>
+			<p>I was interested in learning more about options but after
+			playing with this a little bit I decided it was more like 
+			gambling than investing and lost interest.  2015-11-22</p>
+			<p>Figure out the profit/loss from buying a call. </p>
+			<form id="callOption" onsubmit="return calc()">
+			<label for="numShares">Number of Shares</label>
+				<input id="numShares" name="numShares" value="100" type="number" step="100">
+			<br>
+				<label for="currentPrice">Current share price of security</label>
+					<input id="currentPrice" name="currentPrice" type="number"
+						 value="35.00" step="0.01">
+				<label for="exPrice">Security share price when call is executed</label>
+					<input id="exPrice" name="exPrice" type="number" step="0.01" placeholder="35.00">
+				<br>
+				<label for="strike">Strike share price</label>
+					<input id="strike" name="strike" type="number" step="0.01" value="33.00">
+				<label for="ask">Ask call price (per single share)</label>
+					<input id="ask" name="ask" type="number" value="30.00" step="0.01">
+				<label for="tradeCost">Trading cost</label>
+					<input id="tradeCost" name="tradeCost" type="number" step="0.01" placeholder="9.95">
+				<br><br>
+				<!--input type="submit" value="Submit"-->
+				<button type="submit" value="submit" form="callOption">
+					Calculate profit</button>
+			</form>
+		</div>
+		<br><hr>
+		<div id="rslt"></div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script>
+			function calc() {
+				var numShares=Number($("#numShares").val());
+				var strike = Number($("#strike").val()) * numShares;
+				var currentPrice = $("#currentPrice").val() * numShares;
+				var ask = Number($("#ask").val()) * numShares;
+				var exPrice = $("#exPrice").val() * numShares;
+
+				var cost= ask + Number($("#tradeCost").val());
+				var opValue = exPrice - strike;
+				var profit = opValue - cost;
+				var noopValue = exPrice-currentPrice;
+				
+				if (profit <=0 ) { profit=0;};
+
+				$("#rslt").html("Cost is: " + cost + 
+					" Option net profit is: " + profit.toFixed(2) + 
+					"<br>Profit if you bought now and sold at Strike price: " +
+						noopValue.toFixed(2));
+		 
+				return false;
+			}
+
+			/* not used maybe built-in for <button>? 
+			function checkSubmit(e){
+				if(e && e.keyCode === 13)
+				{
+					calc();
+					return false;
+					//document.forms[0].submit();
+				}
+				else return e;
+			} */
+			
+			$(document).ready(function(){
+				//$("#calc").click(calc );
+        });
+		</script>
+
+	</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>Test Ajax</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<h1>Test Ajax</h1>
+	<div id="div1">Test Ajax</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+	var tob = [5,7,9];
+	var tact = {
+		cost: 53.52,
+		item: "skateboard"
+	};
+	
+	$(document).ready(function(){
+	//   $("button").click(function(){
+		console.log("doc is ready");
+		$.ajax({url: "../Ajax", 
+			data:{json:tact}, datatype:"json",
+			success: function(result){
+				$("#div1").html(result);
+		}});
+	// });
+	});
+</script>
+</body>
+</html>
