@@ -1,4 +1,4 @@
-package org.pwv.tools;
+package budget;
 
 import java.sql.Connection;
 import java.sql.SQLException;

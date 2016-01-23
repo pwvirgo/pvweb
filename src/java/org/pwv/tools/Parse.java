@@ -11,10 +11,12 @@ import java.util.logging.Logger;
 public class Parse {
 	
 	static final Logger logger = Logger.getLogger( "CSV2DB.Parse" );
+	static final String EOL = System.getProperty("line.separator");
 	
 	private String errMsg = null;
   private boolean isValid = false;
-	
+	private String[][] parsedArray;
+		
 	/** the events of the finite state machine */
 	enum Event {
 		TEXT (0), BLANK (1), QUOTE (2), DELIM (3), EOL (4) ;
@@ -40,7 +42,7 @@ public class Parse {
 		}
 	}
 	
-	/** the lookup table to determine what to do */
+	/** the lookup table to determine what to do and the next state */
 	final Todo [][] lookup = {
 		// TEXT
 			{new Todo(true, false, false, State.INCELL), // STARTROW 
@@ -95,14 +97,28 @@ public class Parse {
 		return errMsg;
 	}
 	
-	/**
-	 * retrieve any parsed data as a 2 d string array
-	 * @return the data
-	 */
-	public String [] getStringArr() {
-		return new String[0];
+	public String getHtmlTable() {
+		StringBuilder alles = new StringBuilder(1024);
+		alles.append("<table>").append(EOL);
+		boolean row1 = true;
+		
+		for (String [] row: parsedArray) {
+			alles.append("\t<tr>");
+			for (String cell : row) {
+				if (row1) 
+					alles.append("\t\t<th>").append(cell).append("</th>");
+				else
+					alles.append("\t\t<td>").append(cell).append("</td>");					
+			}
+			row1=false;
+			alles.append("</tr>").append(EOL);
+		}
+		return alles.append("</table>").append(EOL).toString();		
 	}
-	
+	/**
+	 * used to debug
+	 * @return a String of the parsed results
+	 */
 	public String getString() {
 		StringBuilder alles = new StringBuilder(500);
 		for (String [] row: parsedArray) {
@@ -114,9 +130,23 @@ public class Parse {
 		return (alles.toString());
 	}
 	
-	private String[][] parsedArray;
-	
-	void parseit( String csv, char delim) {
+	/** 
+	 * 
+	 * @return a 2 d array of the parsed results 
+	 */
+	public String [][] getStrings() {
+		return parsedArray;
+	}
+
+	/** 
+	 * parse the CSV and store the result in parsedArray - store any error messages
+	 *	in errmsg
+	 * 
+	 * @param csv  The data to be parsed
+	 * @param delim the data delimiter
+	 * @return true if parse was successful, else false
+	 */
+	boolean parseit( String csv, char delim) {
 		
 		char  currChr;
 		Event currEvent;
@@ -159,10 +189,9 @@ public class Parse {
 					onerow.clear();
 				}
 			}			
-			if (j > 25000) break;
+			//if (j > 25000) break;
 		}
 
-		
 		// end of file - which was not handled 
 		if ((currState!=State.STARTROW)) {
 					onerow.add(tmps.toString());
@@ -172,11 +201,11 @@ public class Parse {
 					onerow.clear();
 		}
 		parsedArray = new String[allrows.size()][];
-		allrows.toArray(parsedArray);		
+		allrows.toArray(parsedArray);
+		return isValid;
 	}
 	
-	
-	
+	/*
 	public String getString( List <String []> result) {
 		StringBuilder alles =new StringBuilder(500);
 		for (String [] row: result) {
@@ -186,5 +215,5 @@ public class Parse {
 			alles.append("\n");
 		}
 		return (alles.toString());
-	}
+	} */
 }

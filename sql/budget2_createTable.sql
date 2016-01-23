@@ -26,25 +26,28 @@ ALTER TABLE CAT ADD CONSTRAINT CAT_PK PRIMARY KEY ( CAT ) ;
 
 
 --  Transaction is  either income or expense
+--ALTER TABLE TRNS_CAT DROP CONSTRAINT TRNS_CAT_TRANSACT_FK
+ALTER TABLE TRANSACT DROP CONSTRAINT TRANSACT_PK;
+DROP TABLE TRANSACT;
 CREATE TABLE TRANSACT
   (
-    --  Primary id
     TRNS_ID INTEGER NOT NULL ,
-    --  Transaction type is income or expense
-    TRNS_TYPE INTEGER NOT NULL ,
-    --  Transaction date
-    TRNS_DT DATE NOT NULL ,
-    --  Dollar amount of transaction.
-    AMOUNT DECIMAL (12,2) NOT NULL ,
-    --  Transaction Description
-    DESCRIP VARCHAR (255) NOT NULL ,
-    --  Where the tranaction happened
-    LOC VARCHAR (128) ,
-    --  Account id
-    ACCOUNT CHAR (8) NOT NULL
-  ) ;
+    TRNS_TYPE CHAR NOT NULL , /* type is 'I' income or 'E' expense */
+    TRNS_DT DATE NOT NULL,		/*  trasnaction date */
+    AMOUNT DECIMAL (12,2) NOT NULL,		/*  dollar amount */
+		WITHWHOM VARCHAR (64) NOT NULL,		/* with whom the transaction was made */
+    LOC VARCHAR (128),				/*  where the transaction happened */
+    ACCOUNT		VARCHAR (24),		/* account number */
+		UPDT			DATE NOT NULL,	/* date this row was created or updated */
+		KEYWORD1	VARCHAR(12),
+		KEYWORD2	VARCHAR(12),
+		KEYWORD3	VARCHAR(12),
+    DESCRIP		VARCHAR (255) NOT NULL 
+	);
 ALTER TABLE TRANSACT ADD CONSTRAINT TRANSACT_PK PRIMARY KEY ( TRNS_ID ) ;
 
+-- drop SEQUENCE TRNSID RESTRICT:
+CREATE SEQUENCE TRNSID;
 
 --  Transaction category allows for multiple categories per transactio
 CREATE TABLE TRNS_CAT
@@ -63,5 +66,5 @@ ALTER TABLE TRANSACT ADD CONSTRAINT TRANSACT_ACCOUNT_FK FOREIGN KEY ( ACCOUNT ) 
 
 ALTER TABLE TRNS_CAT ADD CONSTRAINT TRNS_CAT_CAT_FK FOREIGN KEY ( CAT ) REFERENCES CAT ( CAT ) ;
 
-ALTER TABLE TRNS_CAT ADD CONSTRAINT TRNS_CAT_TRANSACT_FK FOREIGN KEY ( TRNS_ID ) REFERENCES TRANSACT ( TRNS_ID ) ;
+--ALTER TABLE TRNS_CAT ADD CONSTRAINT TRNS_CAT_TRANSACT_FK FOREIGN KEY ( TRNS_ID ) REFERENCES TRANSACT ( TRNS_ID ) ;
 

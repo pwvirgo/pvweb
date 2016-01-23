@@ -1,5 +1,6 @@
 package org.pwv.tools;
 
+import budget.Queries;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -11,12 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.HttpSession;
 /**
  * Use CSV data (for budget app) as database insert transactions
  * @author pwv 2015
  */
-@WebServlet(name = "Csv2Db", urlPatterns = {"/tools/Csv2Db"})
+@WebServlet(name = "Csv2HtmlServlet", urlPatterns = {"/tools/Csv2HtmlServlet"})
 		
 @MultipartConfig(fileSizeThreshold=1024*1024*2, // 2MB
                  maxFileSize=1024*1024*10,      // 10MB
@@ -27,18 +30,14 @@ import javax.servlet.annotation.MultipartConfig;
  * 
  * 
  */
-public class Csv2Db extends HttpServlet {
+public class Csv2HtmlServlet extends HttpServlet {
 
 	static final Logger logger = Logger.getLogger( "CSV2DB" );
-	// where to save uploaded files on the server
-	// private static final String SAVE_DIR = "uploads";
-	/**
-	 *  store the parameters, extract the CSV data and store as a string
-	 */
+
+	
+	protected CsvBean csvBean = new CsvBean();
 	protected ParamBean params = new ParamBean();
 	protected Parse parse = new Parse();
-	
-	private final Db db = new Db();
 	
 	/**
 	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -58,6 +57,7 @@ public class Csv2Db extends HttpServlet {
 		// constructs path of the directory to save uploaded file
 		//String savePath = appPath + File.separator + SAVE_DIR;
 
+		request.setCharacterEncoding("UTF-8");
 		params.setParams(request);
 		
 		logger.setLevel(Level.FINER);
@@ -67,6 +67,14 @@ public class Csv2Db extends HttpServlet {
 	
 		parse.parseit(params.getCsvText(), params.getDelim());
 		
+		csvBean.setMsg(parse.getErrorMsg());
+		csvBean.setHtmlTable(parse.getHtmlTable());
+		
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("rsltbean", csvBean);
+		RequestDispatcher rdp = request.getRequestDispatcher("/tools/CSV2HTML/Csv2HtmlResult.jsp");
+		rdp.forward(request, response);
 		
 		try (PrintWriter out = response.getWriter()) {
 			/* TODO output your page here. You may use following sample code. */
@@ -104,7 +112,7 @@ public class Csv2Db extends HttpServlet {
 			out.println("<hr><h2>Parsing Errors</h2>");
 			out.println(parse.getErrorMsg());
 			out.println("<hr><h2>Parsing result</h2>");
-			out.println(parse.getString());
+			out.println(parse.getHtmlTable());
 			
 			out.println("<br>");
 			out.println("</body>");
@@ -112,34 +120,7 @@ public class Csv2Db extends HttpServlet {
 		}
 	}
 
-	protected String makeTable(String csv, String delim){
-		StringBuilder tabl = new StringBuilder(500);
-		String[] lines = csv.split("[\n]");
 
-		tabl.append("<table><tr>");
-		
-		// write the column headers
-		String[] stuff=lines[0].trim().split(delim);
-		for (String stuff1 : stuff) {
-			tabl.append("<th>").append(stuff1).append("</th>");
-		}
-		tabl.append("</tr>\n");
-		for (int j=1; j< lines.length; j++) {
-			tabl.append("<tr>");
-			stuff=lines[j].trim().split(delim);
-			
-			// don't include empty lines - this may need more thought.
-			if (stuff.length>2) {
-				for (String stuff1: stuff) {
-					tabl.append("<td>").append(stuff1).append("</td>");
-				}
-			}
-			tabl.append("</tr>\n");
-		}
-		
-		tabl.append("</table>");
-		return tabl.toString();
-	}
 	// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. 
 	// Click on the + sign on the left to edit the code.">
 	/**
