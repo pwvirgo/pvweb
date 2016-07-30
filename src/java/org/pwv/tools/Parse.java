@@ -146,7 +146,7 @@ public class Parse {
 	 * @param delim the data delimiter
 	 * @return true if parse was successful, else false
 	 */
-	boolean parseit( String csv, char delim) {
+	public boolean parseit( String csv, char delim) {
 		
 		char  currChr;
 		Event currEvent;

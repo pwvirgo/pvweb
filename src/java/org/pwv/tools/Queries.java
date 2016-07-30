@@ -1,6 +1,6 @@
 package budget;
 
-import budget.Db;
+import org.pwv.budget.Db;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;

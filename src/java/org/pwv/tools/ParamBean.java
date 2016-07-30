@@ -44,7 +44,7 @@ public class ParamBean {
 	 * @throws IOException
 	 * @throws ServletException 
 	 */
-	protected void setParams(HttpServletRequest request)
+	public void setParams(HttpServletRequest request)
 		throws IOException, ServletException {
 
 		logger.finest("Gathering parameters");

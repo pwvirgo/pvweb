@@ -1,4 +1,4 @@
-package budget;
+package org.pwv.budget;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -18,10 +18,11 @@ import javax.sql.DataSource;
  */
 public class Db {
 	static final Logger log = Logger.getLogger(Db.class.getName());
-	static DataSource ds;
+	static DataSource ds =null;
 	static Context ctx;
 
-	public Db() {
+	
+	public static boolean findDb() {
 		
 		log.info("trying to connect to DB");
 
@@ -31,7 +32,7 @@ public class Db {
 			} catch (NamingException ex) {
 				log.log(Level.SEVERE, "Naming exception for InitialContext: {0}",
 								ex.getMessage());
-				return;
+				return false;
 			}
 			
 		try {
@@ -39,10 +40,19 @@ public class Db {
 		} catch (NamingException ex) {
 			log.log(Level.SEVERE, "Naming exception for context lookup: {0}", 
 							ex.getMessage());
+			return false;
 		}
+		return true;
 	}
 	
 	public static Connection getConnection() {
+
+		if (ds==null) { 
+			if (! findDb()) {
+				return null;
+			}
+		}
+		
 		Connection con = null;
 		try { con = ds.getConnection("Honda","KWB699"); }
 		catch (SQLException ex) {

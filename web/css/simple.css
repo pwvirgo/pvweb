@@ -1,21 +1,32 @@
-body {
-	background-color: #F5F3F5;
-}
-
 table, th, td {
    border: 1px solid black;
 	 border-collapse: collapse;
-	 background-color: #FFFFFA;
 }
 
-th, td {padding: 10px;}
-/* th {background-color: ivory;} */
+table {
+    table-layout: fixed;
+    width: 95%;
+    margin-left:auto; 
+    margin-right:auto;
+}
+
+th, td {padding: 10px; word-wrap:break-word;
+}
+
+tr:nth-child(even){background-color: #ffefdf}
+tr:hover {background-color: #ffd0ff}
 
 legend {font-size: 1.25em}
 
 fieldset, th {
-			 background-color: #FFf0e0;
+    background-color:  #c4fefd ;
 }
+
+
 h1,h2,h3,h4 {text-align: center}
 
 header {font-size: 120%}
+
+body {
+	background-color: fdfdfd;
+}

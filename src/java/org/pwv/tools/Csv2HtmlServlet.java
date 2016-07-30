@@ -32,7 +32,7 @@ import javax.servlet.http.HttpSession;
  */
 public class Csv2HtmlServlet extends HttpServlet {
 
-	static final Logger logger = Logger.getLogger( "CSV2DB" );
+	static final Logger logger = Logger.getLogger( "Csv2HtmlServlet" );
 
 	
 	protected CsvBean csvBean = new CsvBean();
@@ -60,7 +60,7 @@ public class Csv2HtmlServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		params.setParams(request);
 		
-		logger.setLevel(Level.FINER);
+		logger.setLevel(Level.INFO);
 		
 		logger.log(Level.FINER, "Delimiter: {0}", params.getDelim());
 		logger.log(Level.FINER, " csv: {0}", params.getCsvText());
@@ -75,9 +75,8 @@ public class Csv2HtmlServlet extends HttpServlet {
 		session.setAttribute("rsltbean", csvBean);
 		RequestDispatcher rdp = request.getRequestDispatcher("/tools/CSV2HTML/Csv2HtmlResult.jsp");
 		rdp.forward(request, response);
-		
+/*		
 		try (PrintWriter out = response.getWriter()) {
-			/* TODO output your page here. You may use following sample code. */
 			out.println("<!DOCTYPE html>");
 			out.println("<html> ");
 			out.println("<head>");
@@ -117,7 +116,8 @@ public class Csv2HtmlServlet extends HttpServlet {
 			out.println("<br>");
 			out.println("</body>");
 			out.println("</html>");
-		}
+			
+		} */
 	}
 
 

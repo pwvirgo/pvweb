@@ -3,13 +3,13 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Showing CSV file as HTML </title>
+		<title>Bugdet</title>
 		<link rel="stylesheet" type="text/css" href="../css/simple.css">
 	</head>
 	<body onkeypress="return checkSubmit(event)">
 		<h1>This is the budget application</h1>
 		<h2>Import transaction data</h2>
-		<form action="/pvweb/bugdet/budgetServlet" method="post"
+		<form action="/pvweb/budget/BudgetServlet" method="post"
 				enctype="multipart/form-data" onsubmit="return genHTML()">
 			<fieldset><legend>Select a CSV file to process</legend>
 				<label for="csvfile">File of CSV data to be processed</label>
