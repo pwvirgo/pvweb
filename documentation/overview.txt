@@ -1,0 +1,29 @@
+2016 Web site 
+
+
+
+	index.html (has links to budget and csv pages)
+
+	*** CSV an app to convert a csv file to HTML
+	tools/CSV2HTML/CSV2HTML_design.html (design document for csv app)
+
+	tools/CSV2HTML/CSV2HTML.html
+		** user selects csv file, delimiter, and whether to process on
+		the server or in local javascript.  
+	
+
+	*** BUDGET an app to populate database with credit card and banking
+	transactions
+	budget/budget.jsp
+		** user selects csv file, delimiter, and whether to process on
+		the server or in local javascript.  The results are processed by
+		org.pwv.budget/BudgetServlet which displays an HTLM page and updates
+		the TRANSACT table in the BUDGET db.
+
+		
+
+Server - Java EE
+	
+	org.pwv.budget/BudgetServlet displays an HTLM page of transactions and updates the TRANSACT table in the BUDGET db.
+
+	org.pwv.tools

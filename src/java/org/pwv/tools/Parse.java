@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Parse the CSV 
+ * Parse a String with the contents of a CSV file using a finite state machine 
  * @author pwv
  */
 public class Parse {
@@ -14,7 +14,10 @@ public class Parse {
 	static final String EOL = System.getProperty("line.separator");
 	
 	private String errMsg = null;
+
   private boolean isValid = false;
+
+	/** Instance storage of the parsed CSV data */
 	private String[][] parsedArray;
 		
 	/** the events of the finite state machine */
@@ -33,6 +36,7 @@ public class Parse {
     public int code() { return myCode; }
 	}
 	
+	/** a row in the lookup table defining what to do for an event/state pair */
 	class Todo {
 		boolean saveChr, saveCell, saveRow;
 		State nextState;
@@ -76,7 +80,7 @@ public class Parse {
 			new Todo(false, true, true, State.STARTROW)} // STARTCELL (empty cell)
 	};
 	
-	
+	/** classify characters into the limited number of actionalable events */
 	Event getEvent(char c, char delim) {
 		switch (c) {
 			case ' ' : return Event.BLANK;
@@ -97,6 +101,10 @@ public class Parse {
 		return errMsg;
 	}
 	
+	/**
+	 *	Use the instance of parsedArray to create a HTML table
+	 * @return an HTLM table in a String
+	 */
 	public String getHtmlTable() {
 		StringBuilder alles = new StringBuilder(1024);
 		alles.append("<table>").append(EOL);
@@ -132,7 +140,7 @@ public class Parse {
 	
 	/** 
 	 * 
-	 * @return a 2 d array of the parsed results 
+	 * @return a 2 dimensional array of the parsed results 
 	 */
 	public String [][] getStrings() {
 		return parsedArray;
@@ -204,16 +212,4 @@ public class Parse {
 		allrows.toArray(parsedArray);
 		return isValid;
 	}
-	
-	/*
-	public String getString( List <String []> result) {
-		StringBuilder alles =new StringBuilder(500);
-		for (String [] row: result) {
-			for (String cell : row) {
-				alles.append(cell).append(" !!! ");
-			}
-			alles.append("\n");
-		}
-		return (alles.toString());
-	} */
 }

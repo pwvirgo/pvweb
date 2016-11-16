@@ -32,6 +32,11 @@
 			<br>
 			<button type="submit" onkeypress="return checkSubmit(event)">Submit</button>
 		</form>
+		<br><br>
+		<fieldset>
+			<a href="CSV2HTML_design.html"> CSV2HTML design document</a>
+		</fieldset>
+		
 		<script src='CSV2HTML.js'></script>
 		<script>
 			
@@ -46,6 +51,7 @@
 			// process request on the server or the client.
 			function genHTML() {
 				try {
+					// alert("CSV2HTML.html inline javascript at function genHTML");
 					var ex;
 
 					if (document.getElementById('srvr').checked) return true;

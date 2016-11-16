@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Bugdet</title>
+		<title>Budget</title>
 		<link rel="stylesheet" type="text/css" href="../css/simple.css">
 	</head>
 	<body onkeypress="return checkSubmit(event)">

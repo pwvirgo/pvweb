@@ -22,8 +22,10 @@ public class Db {
 	static Context ctx;
 
 	
+	/** Find a DataSource using a lookup in the InitialContext for "jdbc/honda"
+	 * @return true if found else false 
+	 */ 
 	public static boolean findDb() {
-		
 		log.info("trying to connect to DB");
 
 		try {
@@ -45,8 +47,11 @@ public class Db {
 		return true;
 	}
 	
+	/**
+	 * connect to the database 
+	 * @return the database Connection or null if failed.
+	 */
 	public static Connection getConnection() {
-
 		if (ds==null) { 
 			if (! findDb()) {
 				return null;
@@ -63,6 +68,10 @@ public class Db {
 		return con;		
 	}
 	
+	/**
+	 * Close the database connection.
+	 * @param con the connection to close.
+	 */
 	public static void closeConnection(Connection con) {
 		if (con != null) {
 			try {
