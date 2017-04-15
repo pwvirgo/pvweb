@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Parse a String with the contents of a CSV file using a finite state machine 
+ * CsvParse a String with the contents of a CSV file using a finite state machine
+ * 
  * @author pwv
  */
-public class Parse {
+public class CsvParse {
 	
-	static final Logger logger = Logger.getLogger( "CSV2DB.Parse" );
+	static final Logger log = Logger.getLogger( "CSV2DB.Parse" );
 	static final String EOL = System.getProperty("line.separator");
 	
 	private String errMsg = null;
@@ -30,7 +31,8 @@ public class Parse {
 	
 	/** the states of the finite state machine */
 	enum State {
-		STARTROW (0), INCELL	 (1), INQCELL	 (2), QINQCELL	 (3), STARTCELL (4), ERROR (5);
+		STARTROW (0), INCELL	 (1), INQCELL	 (2), QINQCELL	 (3), STARTCELL (4),
+		LIMBO (5), ERROR (6);
     private final int myCode;
     State(int stateCode) { myCode = stateCode; }
     public int code() { return myCode; }
@@ -53,34 +55,39 @@ public class Parse {
 			new Todo(true, false, false, State.INCELL), // INCELL
 			new Todo(true, false, false, State.INQCELL), // INQCELL
 			new Todo(false, false, false, State.ERROR), // INQINQCELL
-			new Todo(true, false, false, State.INCELL)}, // STARTCELL
+			new Todo(true, false, false, State.INCELL), // STARTCELL
+			new Todo(true, false, false, State.INCELL)}, // LIMBO		
 		// BLANK
 			{new Todo(false, false, false, State.STARTROW), // STARTROW (ignore leading blanks)
 			new Todo(true, false, false, State.INCELL), // INCELL
 			new Todo(true, false, false, State.INQCELL), // INQCELL
-			new Todo(false, false, false, State.ERROR), // INQINQCELL
-			new Todo(false, false, false, State.INCELL)}, // STARTCELL (ignore leading blanks)
+			new Todo(false, false, false, State.LIMBO), // INQINQCELL
+			new Todo(false, false, false, State.STARTCELL), // STARTCELL (ignore leading blanks)
+			new Todo(false, false, false, State.LIMBO)}, // LIMBO	
 		// QUOTE
 			{new Todo(false, false, false, State.INQCELL), // STARTROW (ignore leading blanks)
-			new Todo(true, false, false, State.INQCELL), // INCELL
-			new Todo(false, false, false, State.QINQCELL), // INQCELL  ?????????
+			new Todo(true, false, false, State.INCELL), // INCELL  - allow quote as normal char in unquoted cells
+			new Todo(false, false, false, State.QINQCELL), // INQCELL  
 			new Todo(true, false, false, State.INQCELL), // INQINQCELL
-			new Todo(false, false, false, State.INQCELL)}, // STARTCELL (quoted cell)
+			new Todo(false, false, false, State.INQCELL), // STARTCELL (quoted cell)
+			new Todo(false, false, false, State.INQCELL)}, // LIMBO	
 		// DELIMIT
 			{new Todo(false, true, false, State.STARTCELL), // STARTROW (empty cell)
 			new Todo(false, true, false, State.STARTCELL), // INCELL
 			new Todo(true, false, false, State.INQCELL), // INQCELL
 			new Todo(false, true, false, State.STARTCELL), // INQINQCELL
-			new Todo(false, true, false, State.STARTCELL)}, // STARTCELL (empty cell)
+			new Todo(false, true, false, State.STARTCELL), // STARTCELL (empty cell)
+			new Todo(false, true, false, State.STARTCELL)}, // LIMBO	
 		// END LINE
 			{new Todo(false, false, false, State.STARTROW), // STARTROW (ignore empty row)
 			new Todo(false, true, true, State.STARTROW), // INCELL
 			new Todo(true, false, false, State.INQCELL), // INQCELL (save eol char)
 			new Todo(false, true, true, State.STARTROW), // INQINQCELL
-			new Todo(false, true, true, State.STARTROW)} // STARTCELL (empty cell)
+			new Todo(false, true, true, State.STARTROW), // STARTCELL (empty cell)
+			new Todo(false, true, true, State.STARTROW)}, // LIMBO	
 	};
 	
-	/** classify characters into the limited number of actionalable events */
+	/** classify characters into the limited number of actionable events */
 	Event getEvent(char c, char delim) {
 		switch (c) {
 			case ' ' : return Event.BLANK;
@@ -102,7 +109,7 @@ public class Parse {
 	}
 	
 	/**
-	 *	Use the instance of parsedArray to create a HTML table
+	 *	Use the current  instance of parsedArray to create a HTML table
 	 * @return an HTLM table in a String
 	 */
 	public String getHtmlTable() {
@@ -140,7 +147,7 @@ public class Parse {
 	
 	/** 
 	 * 
-	 * @return a 2 dimensional array of the parsed results 
+	 * @return a 2 dimensional string array of the parsed results 
 	 */
 	public String [][] getStrings() {
 		return parsedArray;
@@ -158,10 +165,10 @@ public class Parse {
 		
 		char  currChr;
 		Event currEvent;
-		StringBuilder tmps = new StringBuilder(50); 
+		StringBuilder tmps = new StringBuilder(50); // temp storage for cell contents
 		Todo todo;
-		List <String> onerow = new ArrayList<>();
-		List <String []> allrows = new ArrayList <>();
+		List <String> onerow = new ArrayList<>();  //  array to hold a single row
+		List <String []> allrows = new ArrayList <>();  // array to hold all rows
 
 		State currState = State.STARTROW;
 		isValid=true;

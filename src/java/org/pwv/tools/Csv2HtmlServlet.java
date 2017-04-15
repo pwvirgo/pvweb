@@ -37,7 +37,7 @@ public class Csv2HtmlServlet extends HttpServlet {
 	
 	protected CsvBean csvBean = new CsvBean();
 	protected ParamBean params = new ParamBean();
-	protected Parse parse = new Parse();
+	protected CsvParse parse = new CsvParse();
 	
 	/**
 	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -75,49 +75,6 @@ public class Csv2HtmlServlet extends HttpServlet {
 		session.setAttribute("rsltbean", csvBean);
 		RequestDispatcher rdp = request.getRequestDispatcher("/tools/CSV2HTML/Csv2HtmlResult.jsp");
 		rdp.forward(request, response);
-/*		
-		try (PrintWriter out = response.getWriter()) {
-			out.println("<!DOCTYPE html>");
-			out.println("<html> ");
-			out.println("<head>");
-			out.println("<title>new HTML</title>");
-			out.println("<link rel=\"stylesheet\" type=\"text/css\" " + 
-							" href=\"../css/simple.css\">");
-			out.println("</head>");
-			out.println("<body>");
-			out.println("<h1>Servlet CSVtoHTML at " +  request.getContextPath() + "</h1>");
-			out.println("java.home: " + System.getProperty("java.home"));
-			out.println("<br>");
-			
-			
-			Queries qu;
-
-			try {
-				qu=new Queries();
-				String [][] rows=qu.acct();
-				for(String [] row: rows) {
-					for (String cell: row) {
-						out.println(cell + " ");
-					}
-					out.println("<br>");
-				}
-				out.println(qu.acctAsHtmlTable());
-				qu.close();
-			} catch (SQLException ex) {
-				logger.log(Level.SEVERE, "Query of ACCOUNT failed\n: {0}", ex.getMessage());
-				out.println("<h1>Error querying ACCOUNT</h1>" + ex.getMessage());
-			}
-		
-			out.println("<hr><h2>Parsing Errors</h2>");
-			out.println(parse.getErrorMsg());
-			out.println("<hr><h2>Parsing result</h2>");
-			out.println(parse.getHtmlTable());
-			
-			out.println("<br>");
-			out.println("</body>");
-			out.println("</html>");
-			
-		} */
 	}
 
 

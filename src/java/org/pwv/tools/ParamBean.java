@@ -17,23 +17,28 @@ public class ParamBean {
 	private String csvText=null;
 
 	private char delim;
-	
-	/** @return the CSV delimiter */	
-	public char getDelim() { return delim;} 
-	
+	private String dataType;
+
 	/** @return the CSV file contents */
 	public String getCsvText() { return csvText;}
+
+	/** @return the datatype */
+	public String getDataType() {return dataType;}
+
+	/** @return the CSV delimiter */	
+	public char getDelim() { return delim;} 
+
+	/** set the CSV contents 
+	 * @param s the contents of the CSV file as a string */
+	public void setCsvText(String s) { csvText = s;}
 	
-	/**  set the CSV delimiter
+	public void setDataType(String s) {dataType=s;}
+	
+	/**  set the CSV delimiter  
 	 * @param s the delimiter  */
 	public void setDelim(String s) { 
 		if (s.equals("\\t")) delim='\t';
 		else delim = s.charAt(0);}
-	
-	/** set the CSV contents 
-	 * @param s the contents of the CSV file as a string */
-	public void setCsvText(String s) { csvText = s;}
-
 	
 	/**
 	 * Gather the http request parameters and save them in this java bean, 
@@ -58,8 +63,10 @@ public class ParamBean {
 			String z=new String(buf);
 			
 			switch (part.getName()) {
-				case "delim" : this.setDelim(z); break;
 				case "csvfile" : this.setCsvText(z); break;
+				case "dataType": this.setDataType(z);
+				case "delim" : this.setDelim(z); break;
+
 				default: break;
 			}
 		}		

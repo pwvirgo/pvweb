@@ -1,20 +1,26 @@
 col1, col2, col3
 1,2,3
-1,only 2 columns
+first col,last col
 empty,, 2nd column
 ,empty, 1st column
+1,end of line right after delimiter?,
 ,,
+
 prior line was, all empty cells,3
 1,2,"quoted colomn"
-"comma, in qoute", 2, 3
-"""quotes within qoutes",2,3
-1,end of line right after delimiter?,
-1,2,3
+"delimiter, in a quoted cell", 2, 3
+"""quotes within quotes",2, """" reqired to put a " within a quoted cell
+next col has 2"  2 ,2"   2, quotes are just chars in unquoted cells
+next col has 3"" " 3,3"" " 3, quotes are just chars in unquoted cells
+
 
 prioir line, was, empty
 normal,boring,line
 new, line
-in middle cell, 3
+in (unquoted) middle cell, 3  
 quoted, "with 
 new line",is okay
-next cell empty,,last
+next cell is empty,,last cell
+"all cells in quotes " , "with blanks around " , "the delimiters and
+before eol "   
+

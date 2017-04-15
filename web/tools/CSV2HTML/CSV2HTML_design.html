@@ -13,11 +13,14 @@
 	<header>Rules for the CSV file</header>
 	<blockquote>
 		<p>The delimiter between cells must be a single character</p>
-		<p>Quotes are optional but must come in a pair that encloses
-		the entire cell</p>
+		<p>If a cell starts with an odd number of quotes
+			it will be a "quoted cell" and must close the quotes to end the cell 
+		</p>
 		<p>Quotes can be included in a quoted cell - 2 consecutive quotes
-			are included in the cell as a single
-			quote.</p>
+			are included in the cell contents as a single quote.</p>
+		<p>a quote may appear within a unquoted cell and will be treated
+			as a normal character</p>
+		
 		<p>New line will create a new row - unless it occurs with a
 			cell in quotes - it will then be included as a character
 			in that cell</p>
@@ -37,65 +40,73 @@
 		<li>The event and state are indicate the row and column of the
 			relevant cell table</li>
 		<li><ul>
-			<li>the function in that cell is called</li>
+			<li>the function(s) in that cell is called</li>
 			<li>the state is changed to the state in that cell</li>
 			</ul></li>
 		<li>The program completes when the entire file has been processed.</li>
 	</ul>
 	</blockquote>
 </div>
-<p>The logic is in the CVS2HTML.js file.  The Event, State, and 
-	function names in the Javascript match those in this documentation.
-	The main loop is the parseCVS() function.</p>
+
 
 <table>
 	<tbody>
-		<tr><th>Event</th><th colspan="5">State</th>
+		<tr><th>Event</th><th colspan="6">State</th>
 		<tr>
 		<th></th>
 		<th>startRow</th>
 		<th>inCell</th>
 		<th>inQcell</th>
 		<th>QinQcell</th>
-		<th>endCell</th>
+		<th>startCell</th>
+		<th>limbo</th>
 	</tr><tr>
 		<th>text</th>
-		<td>newRowCellChr()<hr>inCell</td> 
+		<td>saveChr()<hr>inCell</td> 
 		<td>saveChr()<hr>inCell</td>
 		<td>saveChr()<hr>inQcell</td>
-		<td>error()<hr></td>
-		<td>newCellWithChr()<hr>inCell</td>
+		<td>error()<hr>error</td>
+		<td>saveChr()<hr>inCell</td>
+		<td>saveChr()<hr>inCell</td>
 	</tr><tr>
 		<th>blank</th>
 		<td>{}<hr>startRow</td> 
 		<td>saveChr()<hr>inCell</td>
 		<td>saveChr()<hr>inQcell</td>
-		<td>error()<hr>inQcell</td>
-		<td>{}<hr>endCell</td>
+		<td>{}<hr>limbo</td>
+		<td>{}<hr>startCell</td>
+		<td>{}<hr>limbo</td>
 	</tr><tr>
 		<th>quote</th>
-		<td>newRowCell()<hr>inQCell</td>
-		<td>saveChr()<hr>inQCell</td>
+		<td>{}<hr>inQCell</td>
+		<td>saveChr()<hr>inCell</td>
 		<td>{}<hr>QinQcell</td>
 		<td>saveChr()<hr>inQcell</td>
-		<td>newCell()<hr>inQCell</td>
+		<td>{}<hr>inQCell</td>
+		<td>{}<hr>inQCell</td>
 	</tr><tr>
 		<th>delimt</th>
-		<td>newRowEmptyCell()<hr>endCell<br></td>
-		<td>endCell()<hr>endCell</td>
+		<td>saveCell()<hr>startCell<br></td>
+		<td>saveCell()<hr>startCell</td>
 		<td>saveChr()<hr>inQcell</td>
-		<td>endCell()<hr>endCell</td>
-		<td>emptyCell()<hr>endCell</td>
+		<td>saveCell()<hr>startCell</td>
+		<td>saveCell()<hr>startCell</td>
+		<td>saveCell()<hr>startCell</td>
 	</tr><tr>
 		<th>End of line</th>
 		<td>{}<hr>startRow<br></td>
-		<td>endCellEndRow()<hr>startRow</td>
+		<td>saveCell,saveRow()<hr>startRow</td>
 		<td>saveChr()<hr>inQcell</td>
-		<td>endCellEndRow()<hr>startRow</td>
-		<td>emptyCellEndRow()<hr>startRow</td>
+		<td>saveCell, saveRow()<hr>startRow</td>
+		<td>saveCell, saveRow()<hr>startRow</td>
+		<td>saveCell, saveRow()<hr>startRow</td>		
 	</tr>
 </tbody></table>
 
+<p>The server logic, in tools/CsvParse.java, is working correctly. The local
+	logic is in the CVS2HTML.js file, and it may malfuction if certain
+	combinations of white space exist between delimiters and quoted cells
+</p>
 
 Designed and written in 2015 by Phil Virgo.
 

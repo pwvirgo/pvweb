@@ -1,0 +1,22 @@
+pvweb change log
+
+	04/2017
+
+created this change log as documentation/changeLog.txt 
+
+started documentation.ods to help me get organized  
+
+renamed src/tools/Parse.java  to src/tools/CsvParse because it parses CSVs
+
+modified src/tools/CsvParse after finding errors when quoted cells are
+	followed by blanks
+
+
+replaced budget/Importx.java with budget/Import.java which is all
+	static methods and can import multiple data types including Merill
+	Lynch Activity data.
+
+modified sql/budget_createTables to create the new table BUDGET.ACTIVITYML to hold Merrill Lynch Activity data
+
+
+

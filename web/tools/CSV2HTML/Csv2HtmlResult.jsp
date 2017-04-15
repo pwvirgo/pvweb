@@ -10,6 +10,7 @@
 	 </head>
 	 <body>
 			<h1>CSV shown as HTML</h1>
-		 <jsp:getProperty name="rsltbean" property="htmlTable" />
+			<jsp:getProperty name="rsltbean" property="msg"/>
+			<jsp:getProperty name="rsltbean" property="htmlTable" />
 	 </body>
 </html>

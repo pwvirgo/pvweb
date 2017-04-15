@@ -11,6 +11,12 @@
 		<h2>Import transaction data</h2>
 		<form action="/pvweb/budget/BudgetServlet" method="post"
 				enctype="multipart/form-data" onsubmit="return genHTML()">
+				<fieldset><legend>Data to be imported</legend>
+					 <select name="dataType">
+						 <option value="transact">transact - budget transaction</option>
+						 <option value="activityML">activityML - Merrill Lynch Activity</option>
+					</select>
+				</fieldset>
 			<fieldset><legend>Select a CSV file to process</legend>
 				<label for="csvfile">File of CSV data to be processed</label>
 				<input type="file" id="csvfile" name="csvfile">

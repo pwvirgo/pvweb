@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.pwv.tools.CsvBean;
 import org.pwv.tools.ParamBean;
-import org.pwv.tools.Parse;
+import org.pwv.tools.CsvParse;
 
 /**
  *
@@ -28,12 +28,12 @@ import org.pwv.tools.Parse;
 
 public class BudgetServlet extends HttpServlet {
 
-	static final Logger logger = Logger.getLogger( "BudgetServlet" );
+	static final Logger log = Logger.getLogger( "BudgetServlet" );
 
 	protected CsvBean csvBean = new CsvBean();
 	protected ParamBean params = new ParamBean();
-	protected Parse parse = new Parse();
-	protected Importx importx = new Importx();
+	protected CsvParse parse = new CsvParse();
+	// protected Importx importx = new Importx();  replaced by Import
 	
 	/**
 	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -51,10 +51,10 @@ public class BudgetServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		params.setParams(request);
 		
-		logger.setLevel(Level.INFO);
-		
-		logger.log(Level.FINER, "Delimiter: {0}", params.getDelim());
-		logger.log(Level.FINER, " csv: {0}", params.getCsvText());
+		log.setLevel(Level.INFO);
+		log.info("Import " + params.getDataType());
+		log.log(Level.FINER, "Delimiter: {0}", params.getDelim());
+		log.log(Level.FINER, " csv: {0}", params.getCsvText());
 	
 		parse.parseit(params.getCsvText(), params.getDelim());
 		
@@ -62,7 +62,9 @@ public class BudgetServlet extends HttpServlet {
 		csvBean.setHtmlTable(parse.getHtmlTable());
 		
 		try {
-			int numrows = importx.tmpTrans(parse.getStrings());
+//			int numrows = importx.tmpTrans(parse.getStrings());
+			int numrows = Import.tmpTrans(parse.getStrings(), params.getDataType());
+			log.log(Level.INFO, "{0} rows were inserted into table", numrows);
 		} catch (SQLException ex) {
 			Logger.getLogger(BudgetServlet.class.getName()).log(Level.SEVERE, null, ex);
 		}

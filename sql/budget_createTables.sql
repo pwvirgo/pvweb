@@ -2,7 +2,7 @@
 --   at:        2015-11-23 23:41:32 EST
 
 
-
+-- not sure why I created this or if it is being used.
 declare global temporary table SESSION.trns
 (   /*  TRNS_ID		INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY, */
     TRNS_TYPE	CHAR NOT NULL ,							/* type is 'I' income or 'E' expense */
@@ -39,6 +39,21 @@ CREATE TABLE CAT
     DESCRIP VARCHAR (128) NOT NULL
   ) ;
 ALTER TABLE CAT ADD CONSTRAINT CAT_PK PRIMARY KEY ( CAT ) ;
+
+-- Merill Lynch Activity 
+DROP TABLE ACTIVITYML;
+CREATE TABLE ACTIVITYML (
+  ID	INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  TRADE_DT		DATE NOT NULL,						/* trade date */
+	SETTLE_DT		DATE,											/* settlement date */
+	ACCOUNT			VARCHAR (64) NOT NULL,		/* account id */
+  DESCRIP			VARCHAR  (128) NOT NULL,	/* transaction description */
+  TRANSTYPE		CHAR (1)  NOT NULL,				/* P=plus M=minus ?=other */
+	SYMBOL		  CHAR(12),									/* stock symbol or CUSIP */
+	QUANTITY		DECIMAL (9,3),						/* number of shares */
+	PRICE				DECIMAL	(9,3),						/* US $ per share */
+	AMOUNT			DECIMAL (14,3)	NOT NULL	/* total value in US $ */
+);
 
 -- drop SEQUENCE TRNSID RESTRICT;
 -- CREATE SEQUENCE TRNSID;
